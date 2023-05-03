@@ -1,0 +1,262 @@
+{
+  "active": false,
+  "connections": {
+    "ePhoto putFile": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Set Uploaded Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Rename File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Function1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-12-09T13:51:32.110Z",
+  "id": "144",
+  "name": "My workflowtest",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "id": "2bc8e8ec-5fce-4769-8d40-ed879fb1c991"
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{$node[\"Set\"].json[\"host\"]}}/api/{{$node[\"Set\"].json[\"token\"]}}/file/putFile?multifiles=0&signature={{$node[\"Set\"].json[\"signature\"]}}",
+        "responseFormat": "string",
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "file:image"
+      },
+      "name": "ePhoto putFile",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1509,
+        665
+      ],
+      "retryOnFail": false,
+      "executeOnce": false,
+      "alwaysOutputData": true,
+      "id": "f87bee35-b404-4980-b813-2ecd12adbbd2",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json[\"fileTooBig\"]}}"
+            }
+          ],
+          "number": []
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1219,
+        725
+      ],
+      "id": "4fd70ba0-35f6-469f-a551-00ac117643a2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"ePhoto putFile\"].json[\"data\"]}}",
+              "value2": "success"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1709,
+        755
+      ],
+      "id": "7bf0098b-8da1-456a-9f64-0737e1e4f05c"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=update database set ephoto_upload='YES' \nwhere raz_id='{{$node[\"Webhook\"].json[\"query\"][\"raz_id\"]}}';",
+        "additionalFields": {}
+      },
+      "name": "Set Uploaded Success",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        1939,
+        735
+      ],
+      "alwaysOutputData": true,
+      "id": "105b77b4-77e8-4edd-ba34-ad85bdc13b85",
+      "credentials": {
+        "postgres": {
+          "id": "8",
+          "name": "postgres_appsmith"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1509,
+        875
+      ],
+      "id": "c28e87c0-e410-430d-9eb4-15e16711c620"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Renomme le fichier avec son identifiant unique Raz\nfor (let item of items) {\n  item.binary.image.fileName = $node[\"Set\"].json[\"raz_id\"] + '.' + item.binary.image.fileExtension;\n  \n  item.json.filesize = item.binary.image.data.length;\n  //item.json.fileTooBig = item.binary.image.data.length > 20000000; // 10MB\n}\n\n\nreturn items;"
+      },
+      "name": "Rename File",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1419,
+        415
+      ],
+      "id": "81479a32-6d2b-49be-ad69-cdff701b871f"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "sku",
+              "value": "1073200"
+            },
+            {
+              "name": "asset_type",
+              "value": "Image on"
+            },
+            {
+              "name": "host",
+              "value": "https://ephoto.fr"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        990,
+        410
+      ],
+      "id": "04636f16-8931-468d-848a-e7b9877d4272"
+    },
+    {
+      "parameters": {
+        "functionCode": "var request = require('request-promise-native')\n\nvar options = {\n  'method': 'GET',\n  'url': 'https://jsonplaceholder.typicode.com/todos/1',\n  'json': true,\n  'headers': {\n  }\n};\n\ntry {\n  const response = await request(options)\n    console.log(response);\n    return [{ json: response }] \n} catch (exception) {\n  throw new Error(exception);\n}\n\n\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        310.19188873846156,
+        163.84181538461553
+      ],
+      "id": "8258989e-9805-4e48-9ae6-4bd1ceac8a95"
+    },
+    {
+      "parameters": {
+        "functionCode": "const axios = require('axios');\n\ntry {\n    const response = await axios.get('https://jsonplaceholder.typicode.com/todos/1')\n    console.log(response.data);\n    return [{ json:response.data }] \n  } catch (error) {\n    console.log(error.response.body);\n    return [{ json: {'value':'error'} }] \n  }\n"
+      },
+      "name": "Function1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        550.1918887384616,
+        163.84181538461553
+      ],
+      "id": "39ce67c2-3d8a-4556-81a7-0e09688e7dd6"
+    },
+    {
+      "parameters": {
+        "functionCode": "const axios = require('axios');\n\nconst result = await axios({\n   url: `the url`,\n   headers: {\n      'Authorization': `Bearer ${auth_token}`,\n      'Content-Type': 'application/json'\n   },\n   method: 'post',\n   data: {\n      'ParentId': record_id,\n      'Name': file_name,\n      'body': body,\n      'Description': description ? description : \"\",\n      'maxContentLength': Infinity,\n      'maxBodyLength': Infinity\n   }\n});\n\n"
+      },
+      "name": "Function2",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        830,
+        160
+      ],
+      "id": "3bae5307-0082-4768-830c-601f0c55b31c"
+    }
+  ],
+  "pinData": {},
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2023-05-03T14:40:10.000Z",
+  "versionId": "1bf2f492-3b92-4235-a184-2301ed489eef"
+}
