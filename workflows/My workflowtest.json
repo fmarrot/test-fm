@@ -41,6 +41,11 @@
             "node": "Rename File",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "coucou",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -207,8 +212,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        990,
-        410
+        840,
+        600
       ],
       "id": "04636f16-8931-468d-848a-e7b9877d4272"
     },
@@ -233,8 +238,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        550.1918887384616,
-        163.84181538461553
+        540,
+        460
       ],
       "id": "39ce67c2-3d8a-4556-81a7-0e09688e7dd6"
     },
@@ -246,10 +251,23 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        830,
-        160
+        960,
+        180
       ],
       "id": "3bae5307-0082-4768-830c-601f0c55b31c"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field\n// called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nreturn $input.all();"
+      },
+      "id": "85fa4471-6bdb-497e-a123-262d2eebb48d",
+      "name": "coucou",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        600
+      ]
     }
   ],
   "pinData": {},
@@ -257,6 +275,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2023-05-03T14:40:10.000Z",
-  "versionId": "1bf2f492-3b92-4235-a184-2301ed489eef"
+  "updatedAt": "2023-05-03T16:36:24.000Z",
+  "versionId": "795895c2-94d6-4b06-b1a4-775b0b9c5c4c"
 }
