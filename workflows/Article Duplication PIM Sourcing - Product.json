@@ -1,0 +1,109 @@
+{
+  "active": false,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "OpenWeatherMap",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenWeatherMap": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-02-08T14:23:29.000Z",
+  "id": "2",
+  "name": "Article Duplication PIM Sourcing - Product",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        100,
+        130
+      ],
+      "id": "c5159aac-458e-4018-8a6a-6228ca36a3b5"
+    },
+    {
+      "parameters": {
+        "path": "43389ebd-444a-4ccc-b721-1a493444605b",
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        450,
+        450
+      ],
+      "webhookId": "43389ebd-444a-4ccc-b721-1a493444605b",
+      "id": "8bb9216c-df3a-4403-a451-f552f6d563e3"
+    },
+    {
+      "parameters": {
+        "cityName": "={{$node[\"Webhook\"].json[\"query\"][\"city\"]}}"
+      },
+      "name": "OpenWeatherMap",
+      "type": "n8n-nodes-base.openWeatherMap",
+      "typeVersion": 1,
+      "position": [
+        640,
+        450
+      ],
+      "credentials": {
+        "openWeatherMapApi": "openweatherapi"
+      },
+      "id": "ba2b4772-f4d8-4beb-a17d-85120c23ef9f"
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "temperature",
+              "value": "={{$node[\"OpenWeatherMap\"].json[\"main\"][\"temp\"]}}"
+            },
+            {
+              "name": "description",
+              "value": "={{$node[\"OpenWeatherMap\"].json[\"weather\"][0][\"description\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        840,
+        450
+      ],
+      "id": "ea1757e4-af5d-406e-8b8c-a4948d647dd5"
+    }
+  ],
+  "pinData": null,
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2023-03-13T16:56:02.996Z",
+  "versionId": "405e8b0e-bc02-4b1a-8355-41bc8de717c0"
+}
