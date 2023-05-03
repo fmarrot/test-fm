@@ -1,0 +1,53 @@
+{
+  "active": false,
+  "connections": {},
+  "createdAt": "2021-02-05T18:03:21.000Z",
+  "id": "1",
+  "name": "Dispo article - code, ansemd",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "id": "99c8169d-07fb-496b-a7b6-97bc59180b0c"
+    },
+    {
+      "parameters": {
+        "url": "=https://esb.coreplighting.com:8081/api/ERP/v2/CRP/CRP/products/{{$parameter[\"headerParametersUi\"][\"parameter\"][0][\"value\"]}}/availabilities_and_replenishments?ansemd={{$parameter[\"headerParametersUi\"][\"parameter\"][1][\"value\"]}}&horizon=0&limit_week_to_horizon=false",
+        "options": {},
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "code_article",
+              "value": "651174"
+            },
+            {
+              "name": "aaaass",
+              "value": "202107"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        450,
+        450
+      ],
+      "id": "437339cd-04ed-4ee9-bbfc-fb8c30f7b3bf"
+    }
+  ],
+  "pinData": null,
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2023-03-13T16:56:02.978Z",
+  "versionId": "005e4678-589a-4444-85ec-c8829fbf38dc"
+}
